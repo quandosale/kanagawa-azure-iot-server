@@ -136,29 +136,82 @@ var writeFile = function (obj, dataset) {
 
   const mac = obj.data.row.emitter;
   createStorage();
-
+  var ecgFile_Size = 0;
+  var hrFile_Size = 0;
   // ecg
-  var ecgBuffer = Buffer.from(obj.data.row.ecg.data);
-  fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.ECG}`, ecgBuffer, "binary", (err) => {
-    if (err) throw err;
-    console.log('The ecg file has been saved!', mac);
-  });
+  try {
+    var ecgArr = obj.data.row.ecg.data;
+    var ecgBuffer = Buffer.from(ecgArr);
+
+    fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.ECG}`, ecgBuffer, "binary", (err) => {
+      if (err) throw err;
+      console.log(`The ecg file has been saved!, size = ${ecgArr.length}, mac = ${mac}, file = ${dataset.file}`);
+    });
+
+    if (fs.exists(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.ECG}`))
+      ecgFile_Size = fs.statSync(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.ECG}`).size;
+
+    if (fs.exists(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`))
+      hrFile_Size = fs.statSync(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`).size;
+
+  } catch (error) {
+    console.log(error);
+  }
 
   // heart rate
-  var heartrate = obj.data.row.heartrate;
-  fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`, heartrate, (err) => {
-    if (err) throw err;
-    console.log('The hr file has been saved!');
-  });
+  try {
+    var heartRateArr = obj.data.row.heartrate.data;
+    var heartrateBuffer = Buffer.from(heartRateArr);
+    fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`, heartrateBuffer, "binary", (err) => {
+      if (err) throw err;
+      console.log(`The hr file has been saved!, size = ${heartRateArr.length}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
+  // AF
+  try {
+    var AFArr = obj.data.row.af.data;
+    var deAFArr = buffer8ToArray(AFArr);
+    console.log(AFArr, deAFArr, 'af')
+    var resultStr = [];
+    console.log(ecgFile_Size, hrFile_Size)
+    var ecgIndex = Math.round(ecgFile_Size / 2 * 3);
+    var hrIndex = Math.round(hrFile_Size / 2 * 3);
+    deAFArr.forEach((value, index) => {
+      if (value == 0) { // if af
+        resultStr.push(ecgIndex + index * 250);
+        resultStr.push(hrIndex + index);
+      }
+    });
+    console.log(resultStr)
+    var AFBuffer = Buffer.from(resultStr);
+    fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.AF}`, resultStr, "binary", (err) => {
+      if (err) throw err;
+      console.log(`The af file has been saved!, size = ${deAFArr.length}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
   // posture
-  var posture = obj.data.row.pos;
-  fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.POSTURE}`, posture, (err) => {
-    if (err) throw err;
-    console.log('The posture file has been saved!');
-  });
+  try {
+    var posture = obj.data.row.pos;
+    fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.POSTURE}`, posture, (err) => {
+      if (err) throw err;
+      console.log('The posture file has been saved!');
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
+function buffer8ToArray(buf) {
+  var arr = [];
+  for (var i = 0; i < buf.length; i++)
+    arr.push(buf[i] & 0xFF);
+  return arr;
+}
 var port = normalizePort(process.env.PORT || "8080");
 server.listen(port, function listening() {
   console.log("Listening on %d", server.address().port);

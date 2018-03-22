@@ -11,6 +11,8 @@ module.exports = {
   FILE_TYPE: {
     ECG: '_ecg.hex',
     HEART_RATE: '_hr.hex',
+    AF: '_af.txt',
+    
     POSTURE: '_pos.hex'
   },
   RECORD_MAX_DURATION: 8 * 3600 * 1000 // 8 hours

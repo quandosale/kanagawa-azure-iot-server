@@ -31,5 +31,7 @@ module.exports = {
       fs.rename(`${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`, `${config.STORAGE_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`, function (err) {});
     if (fs.existsSync(`${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.POSTURE}`))
       fs.rename(`${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.POSTURE}`, `${config.STORAGE_PATH}/${dataset.file}${FILE_TYPE.POSTURE}`, function (err) {});
+    if (fs.existsSync(`${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.AF}`))
+      fs.rename(`${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.AF}`, `${config.STORAGE_PATH}/${dataset.file}${FILE_TYPE.AF}`, function (err) {});
   }
 };
