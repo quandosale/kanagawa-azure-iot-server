@@ -85,7 +85,8 @@ var fs = require('fs');
 router.get("/download/:fileName", (req, res, next) => {
     let filePath = `${config.STORAGE_PATH}/${req.params.fileName}`;
     if (!fs.existsSync(filePath)) {
-        return util.responseHandler(res, false, "There is not exist file", filePath);
+        console.error('file not found', filePath);
+        return res.sendStatus(404);
     }
     return res.download(filePath);
 });
