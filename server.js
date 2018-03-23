@@ -133,7 +133,6 @@ var findDataset = function (obj, datasetId) {
 };
 
 var writeFile = function (obj, dataset) {
-
   const mac = obj.data.row.emitter;
   createStorage();
   var ecgFile_Size = 0;
@@ -176,9 +175,7 @@ var writeFile = function (obj, dataset) {
   try {
     var AFArr = obj.data.row.af.data;
     var deAFArr = buffer8ToArray(AFArr);
-    console.log(AFArr, deAFArr, 'af')
     var resultStr = [];
-    console.log(ecgFile_Size, hrFile_Size)
     var ecgIndex = Math.round(ecgFile_Size / 2 * 3);
     var hrIndex = Math.round(hrFile_Size / 2 * 3);
     deAFArr.forEach((value, index) => {
@@ -187,7 +184,6 @@ var writeFile = function (obj, dataset) {
         resultStr.push(hrIndex + index);
       }
     });
-    console.log(resultStr)
     var AFBuffer = Buffer.from(resultStr);
     fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.AF}`, resultStr, "binary", (err) => {
       if (err) throw err;

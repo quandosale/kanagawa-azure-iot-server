@@ -110,17 +110,21 @@ router.put("/", (req, res) => {
 
 // delete gateway by deviceId
 router.delete("/:gateway", (req, res, next) => {
-  console.log('delete gateway:')
+  var gatewayID = req.gateway._id;
+  console.log('delete gateway: => ', gatewayID)
   util.removeDevice(req.params.gateway, err => {
-    console.log(err);
-    return req.gateway
-      .remove()
-      .then(() => {
+    // console.log(err);
+     return req.gateway
+       .remove()
+       .then(() => {
+        Device.deleteMany({
+          gateway: gatewayID
+        }).exec();
         res.status(204).json({
           success: true,
         });
-      })
-      .catch(next);
+       })
+       .catch(next);
   });
 });
 

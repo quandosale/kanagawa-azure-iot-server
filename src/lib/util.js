@@ -53,14 +53,6 @@ var moveItem = function (dataset, fileType) {
 var uploadToStorage = function (dataset, fileType) {
   let source_file_url = `${config.STORAGE_TMP_PATH}/${dataset.file}${fileType}`;
   let dest_file_name = `${dataset.file}${fileType}`;
-  // fileService.createFileFromLocalFile(SHARE_NAME, DIRECTORY, dest_file_name, source_file_url, function (error, result, response) {
-  //   if (!error) {
-  //     // file uploaded
-  //     console.log('successfully uploaded');
-  //     console.log(result)
-  //   }
-  //   console.log(error)
-  // });
 
   blobService.createBlockBlobFromLocalFile(SHARE_NAME, dest_file_name, source_file_url, function(error, result, response) {
     if (!error) {
@@ -68,7 +60,6 @@ var uploadToStorage = function (dataset, fileType) {
       console.log('uploaded & delete tmp');
       fs.unlinkSync(`${config.STORAGE_TMP_PATH}/${dataset.file}${fileType}`);
     }
-    console.log(error)
   });
 };
 
