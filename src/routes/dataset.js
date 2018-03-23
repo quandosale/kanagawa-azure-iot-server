@@ -8,19 +8,30 @@ var util = require("../lib/util");
 
 router.post("/get-list", (req, res, next) => {
     Dataset.find({})
-    .populate('gatewayId')
-    .populate('deviceId')
-    .then ((datasets) => {
-        return util.responseHandler(res, true, "Success", datasets);
-    })
-    .catch(err => {
-        return util.responseHandler(res, false, "Error", err);
-    });
+        .populate('gatewayId')
+        .populate('deviceId')
+        .then((datasets) => {
+            return util.responseHandler(res, true, "Success", datasets);
+        })
+        .catch(err => {
+            return util.responseHandler(res, false, "Error", err);
+        });
 });
 
 router.put("/recordcancel", (req, res, next) => {
     var deviceId = req.body.deviceId;
-    console.log(deviceId);
+    var datasetId = req.body.datasetId;
+    console.log(datasetId);
+    Dataset.deleteOne({
+            datasetId: datasetId
+        })
+        .exec()
+        .then(res => {
+            // console.log(res)
+        })
+        .catch(error => {
+            // console.log(error)
+        })
     Device.findByIdAndUpdate(deviceId, {
         $set: {
             isRecord: false
@@ -83,7 +94,7 @@ router.put("/recordstop", (req, res, next) => {
 var fs = require('fs');
 
 router.get("/download/:fileName", (req, res, next) => {
-    
+
     let filePath = `${config.STORAGE_PATH}/${req.params.fileName}`;
     console.log('downloading ...', filePath)
     if (!fs.existsSync(filePath)) {
