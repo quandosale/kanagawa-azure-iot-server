@@ -83,7 +83,9 @@ router.put("/recordstop", (req, res, next) => {
 var fs = require('fs');
 
 router.get("/download/:fileName", (req, res, next) => {
+    
     let filePath = `${config.STORAGE_PATH}/${req.params.fileName}`;
+    console.log('downloading ...', filePath)
     if (!fs.existsSync(filePath)) {
         console.error('file not found', filePath);
         return res.sendStatus(404);

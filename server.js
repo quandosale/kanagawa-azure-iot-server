@@ -160,12 +160,14 @@ var writeFile = function (obj, dataset) {
 
   // heart rate
   try {
-    var heartRateArr = obj.data.row.heartrate.data;
-    var heartrateBuffer = Buffer.from(heartRateArr);
-    fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`, heartrateBuffer, "binary", (err) => {
-      if (err) throw err;
-      console.log(`The hr file has been saved!, size = ${heartRateArr.length}`);
-    });
+    if (obj.data.row.heartrate != null) {
+      var heartRateArr = obj.data.row.heartrate.data;
+      var heartrateBuffer = Buffer.from(heartRateArr);
+      fs.appendFile(`./${config.STORAGE_TMP_PATH}/${dataset.file}${FILE_TYPE.HEART_RATE}`, heartrateBuffer, "binary", (err) => {
+        if (err) throw err;
+        console.log(`The hr file has been saved!, size = ${heartRateArr.length}`);
+      });
+    }
   } catch (error) {
     console.log(error);
   }

@@ -8,11 +8,17 @@ module.exports = {
   },
   STORAGE_PATH: './storage',
   STORAGE_TMP_PATH: './storage_tmp',
+  AZURE_STORAGE: {
+    accountName: 'kanagawawfdb',
+    accountConnectStr: 'DefaultEndpointsProtocol=https;AccountName=kanagawawfdb;AccountKey=bGnQQDlYX7vVx+u69sEzwRLN5TKdLeqFMu5pr8wSDi+jYkyxYO5haFBz5x47XMqWeUfQ4FC8dSvQfrTGesc+Sg==;EndpointSuffix=core.windows.net',
+    SHARE_NAME: 'calm-share',
+    DIRECTORY: 'wfdb',
+  },
   FILE_TYPE: {
     ECG: '_ecg.hex',
     HEART_RATE: '_hr.hex',
-    AF: '_af.txt',
-    
+    AF: '_af.hex',
+
     POSTURE: '_pos.hex'
   },
   RECORD_MAX_DURATION: 8 * 3600 * 1000 // 8 hours
