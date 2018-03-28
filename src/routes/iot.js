@@ -41,7 +41,8 @@ router.post("/direct-method", (req, res) => {
 // return gateway firmware version
 router.get("/firmware-version", (req, res) => {
   return res.json({
-      RPI_GATEWAY_VERSION: RPI_GATEWAY_VERSION,
+    RPI_GATEWAY_VERSION: RPI_GATEWAY_VERSION,
+    checksum: '492d5c66e94b1ac286a312dc4adb366d'
   });
 });
 
