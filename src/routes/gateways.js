@@ -2,13 +2,12 @@ var router = require("express").Router();
 var mongoose = require("mongoose");
 var Gateway = mongoose.model("Gateway");
 var Device = mongoose.model("Device");
-
 var util = require("../lib/util");
 
 router.param("gateway", function (req, res, next, deviceId) {
   Gateway.findOne({
-    deviceId: deviceId,
-  })
+      deviceId: deviceId,
+    })
     .then(function (gateway) {
       if (!gateway) {
         return res.sendStatus(404);
@@ -24,7 +23,9 @@ router.param("gateway", function (req, res, next, deviceId) {
 // return a list of gateways
 router.get("/", function (req, res, next) {
   Gateway.find()
-    .populate({ path: "devices" })
+    .populate({
+      path: "devices"
+    })
     .then(function (gateways) {
       return res.json({
         gateways: gateways,
@@ -36,8 +37,8 @@ router.get("/", function (req, res, next) {
 // return specific gateway with deviceID
 router.get("/:deviceId", (req, res) => {
   Gateway.findOne({
-    deviceId: req.params.deviceId,
-  })
+      deviceId: req.params.deviceId,
+    })
     .populate("devices")
     .then(gateway => {
       return res.json({
@@ -45,6 +46,8 @@ router.get("/:deviceId", (req, res) => {
       });
     });
 });
+
+
 
 // post gateway
 router.post("/", (req, res, next) => {
@@ -83,7 +86,9 @@ router.post("/", (req, res, next) => {
 router.put("/", (req, res) => {
   const gateway = req.body.gateway;
   const devices = gateway.devices.map(device => {
-    return Object.assign(device, { gateway: device.gatewayID });
+    return Object.assign(device, {
+      gateway: device.gatewayID
+    });
   });
 
   return Gateway.findByDeviceID(gateway.deviceId)
@@ -103,7 +108,9 @@ router.put("/", (req, res) => {
       gatewayInstance.isApprove = gateway.isApprove;
 
       gatewayInstance.save().then(() => {
-        res.json({ success: true });
+        res.json({
+          success: true
+        });
       });
     });
 });
@@ -114,17 +121,17 @@ router.delete("/:gateway", (req, res, next) => {
   console.log('delete gateway: => ', gatewayID)
   util.removeDevice(req.params.gateway, err => {
     // console.log(err);
-     return req.gateway
-       .remove()
-       .then(() => {
+    return req.gateway
+      .remove()
+      .then(() => {
         Device.deleteMany({
           gateway: gatewayID
         }).exec();
         res.status(204).json({
           success: true,
         });
-       })
-       .catch(next);
+      })
+      .catch(next);
   });
 });
 

@@ -4,6 +4,8 @@ var Client = require("azure-iothub").Client;
 var connectionString = config.IOT_CONNECTION_STRING;
 var client = Client.fromConnectionString(connectionString);
 
+var CONFIG = require('../../config');
+var RPI_GATEWAY_VERSION = CONFIG.RPI_GATEWAY_VERSION;
 
 router.post("/direct-method", (req, res) => {
   console.log(req.body);
@@ -36,5 +38,15 @@ router.post("/direct-method", (req, res) => {
     }
   });
 });
+// return gateway firmware version
+router.get("/firmware-version", (req, res) => {
+  return res.json({
+      RPI_GATEWAY_VERSION: RPI_GATEWAY_VERSION,
+  });
+});
 
+// Download gateway firmware
+router.get("/firmware-download", (req, res) => {
+  res.download('./public/rpi-server-dist.zip');
+});
 module.exports = router;
