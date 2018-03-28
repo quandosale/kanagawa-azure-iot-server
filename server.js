@@ -68,7 +68,9 @@ iotHubReader.startReadMessage(function (obj, date) {
   try {
     console.log(date);
     date = date || Date.now();
+
     checkRecordStatus(obj);
+    console.log(obj)
     wss.broadcast(
       JSON.stringify(
         Object.assign(obj, {
@@ -94,6 +96,7 @@ var createStorage = function () {
 };
 // Check Record Status from mongodb, by device(calm-device), isRecord flag, append the data
 var checkRecordStatus = function (obj) {
+  if (obj.TAG != "ECG") return;
   const mac = obj.data.row.emitter;
   if (Device == null) {
     console.log("Mongo 'Device' still not inited.");
