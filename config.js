@@ -22,5 +22,5 @@ module.exports = {
     POSTURE: '_pos.hex'
   },
   RECORD_MAX_DURATION: 8 * 3600 * 1000, // 8 hours
-  RPI_GATEWAY_VERSION: 2
+  RPI_GATEWAY_VERSION: "2.0.0"
 };
