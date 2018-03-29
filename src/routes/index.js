@@ -8,8 +8,8 @@ router.use('/dataset', require('./dataset'));
 router.get('/check', (req, res) => {
     res.json({
         success: true
-    })
-})
+    });
+});
 router.post('/request-licence-key', (req, res) => {
     const key = req.body.key;
     const CONFIG = require('../../config');
@@ -21,7 +21,7 @@ router.post('/request-licence-key', (req, res) => {
         })
     return res.json({
         success: false
-    })
-})
+    });
+});
 
 module.exports = router;

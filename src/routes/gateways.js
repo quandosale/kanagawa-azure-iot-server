@@ -81,7 +81,40 @@ router.post("/", (req, res, next) => {
       .catch(next);
   });
 });
+// update gateway firmware
+router.post("/update-firmware", (req, res, next) => {
+  var deviceId = req.body.gateway.deviceId;
+  Gateway.findOne({
+    deviceId: deviceId,
+  }).then(gateway => {
+    if (gateway) {
+      return res.json({
+        message: "Updated Firmware",
+        success: true
+      });
+    }
 
+    Gateway.findByIdAndUpdate(deviceId, {
+      $set: {
+        firmware: req.body.gateway.firmware
+      }
+    }, {
+      new: true
+    }, function (err, gateway) {
+      if (err) {
+        return res.json({
+          message: "Cannot find gateway",
+          success: false
+        });
+      }
+      return res.json({
+        message: "Cannot find gateway",
+        success: false
+      });
+
+    });
+  });
+});
 // update gateway
 router.put("/", (req, res) => {
   const gateway = req.body.gateway;
