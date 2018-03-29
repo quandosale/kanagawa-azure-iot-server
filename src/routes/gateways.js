@@ -88,12 +88,12 @@ router.post("/update-firmware", (req, res, next) => {
     deviceId: deviceId,
   }).then(gateway => {
     if (gateway) {
-      Gateway.findByIdAndUpdate(deviceId, {
+      Gateway.update({
+        deviceId: deviceId
+      }, {
         $set: {
           firmware: req.body.gateway.firmware
         }
-      }, {
-        new: true
       }, function (err, gateway) {
         if (err) {
           return res.json({
@@ -108,12 +108,14 @@ router.post("/update-firmware", (req, res, next) => {
           gateway: gateway
         });
       });
+    } else {
+      return res.json({
+        message: "Cannot find gateway",
+        success: false
+      });
     }
 
-    return res.json({
-      message: "Cannot find gateway",
-      success: false
-    });
+
 
   });
 });
