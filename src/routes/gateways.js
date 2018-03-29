@@ -88,31 +88,33 @@ router.post("/update-firmware", (req, res, next) => {
     deviceId: deviceId,
   }).then(gateway => {
     if (gateway) {
-      return res.json({
-        message: "Updated Firmware",
-        success: true
+      Gateway.findByIdAndUpdate(deviceId, {
+        $set: {
+          firmware: req.body.gateway.firmware
+        }
+      }, {
+        new: true
+      }, function (err, gateway) {
+        if (err) {
+          return res.json({
+            message: "Cannot update gateway",
+            success: false,
+            error: err
+          });
+        }
+        return res.json({
+          message: "Updated Firmware",
+          success: true,
+          gateway: gateway
+        });
       });
     }
 
-    Gateway.findByIdAndUpdate(deviceId, {
-      $set: {
-        firmware: req.body.gateway.firmware
-      }
-    }, {
-      new: true
-    }, function (err, gateway) {
-      if (err) {
-        return res.json({
-          message: "Cannot find gateway",
-          success: false
-        });
-      }
-      return res.json({
-        message: "Cannot find gateway",
-        success: false
-      });
-
+    return res.json({
+      message: "Cannot find gateway",
+      success: false
     });
+
   });
 });
 // update gateway
