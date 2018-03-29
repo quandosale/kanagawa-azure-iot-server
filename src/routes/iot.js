@@ -38,16 +38,29 @@ router.post("/direct-method", (req, res) => {
     }
   });
 });
+var md5File = require('md5-file');
+var fs = require('fs');
+var dist_path = './public/rpi-server-dist.zip';
 // return gateway firmware version
 router.get("/firmware-version", (req, res) => {
-  return res.json({
-    RPI_GATEWAY_VERSION: RPI_GATEWAY_VERSION,
-    checksum: '7dd2c10821a37444d3dc504eaaa16fba'
-  });
+
+  if (fs.existsSync(dist_path)) {
+    const hash = md5File.sync(dist_path);
+    return res.json({
+      RPI_GATEWAY_VERSION: RPI_GATEWAY_VERSION,
+      checksum: hash
+    });
+  } else {
+    return res.json({
+      RPI_GATEWAY_VERSION: RPI_GATEWAY_VERSION,
+      checksum: '7dd2c10821a37444d3dc504eaaa16fba'
+    });
+  }
+
 });
 
 // Download gateway firmware
 router.get("/firmware-download", (req, res) => {
-  res.download('./public/rpi-server-dist.zip');
+  res.download(dist_path);
 });
 module.exports = router;
