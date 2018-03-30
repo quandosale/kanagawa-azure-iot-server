@@ -4,6 +4,7 @@ var router = express.Router();
 router.use('/gateways', require('./gateways'));
 router.use('/iot', require('./iot'));
 router.use('/dataset', require('./dataset'));
+router.use('/errormessage', require('./errormessage'));
 
 router.get('/check', (req, res) => {
     res.json({
