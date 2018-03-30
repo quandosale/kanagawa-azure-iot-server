@@ -6,7 +6,7 @@ var util = require("../lib/util");
 
 var ErrorMessage = mongoose.model("ErrorMessage");
 
-router.put("/insert", (req, res, next) => {
+router.post("/insert", (req, res, next) => {
     var newErrorMessage = new ErrorMessage(req.body.errormessage);
     newErrorMessage.save().then(() => {
         res.json({
