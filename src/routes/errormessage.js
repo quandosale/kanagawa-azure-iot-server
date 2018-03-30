@@ -14,3 +14,4 @@ router.post("/insert", (req, res, next) => {
         });
     });
 });
+module.exports = router;
