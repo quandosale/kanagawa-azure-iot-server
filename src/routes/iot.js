@@ -59,8 +59,18 @@ router.get("/firmware-version", (req, res) => {
 
 });
 
+const uuidv1 = require('uuid/v1');
 // Download gateway firmware
 router.get("/firmware-download", (req, res) => {
-  res.download(dist_path);
+  var tmp_file = uuidv1();
+  fs.copyFile(dist_path, tmp_file, function (error) {
+    res.download(dist_path, function (err_download) {
+      if (err_download) {
+        console.log(err_download);
+      }
+      console.log('deleting ', tmp_file);
+      fs.unlinkSync(tmp_file);
+    });
+  });
 });
 module.exports = router;
