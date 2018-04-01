@@ -59,18 +59,54 @@ router.get("/firmware-version", (req, res) => {
 
 });
 
+function copyFile(source, target, cb) {
+  var cbCalled = false;
+
+  var rd = fs.createReadStream(source);
+  rd.on("error", function (err) {
+    done(err);
+  });
+  var wr = fs.createWriteStream(target);
+  wr.on("error", function (err) {
+    done(err);
+  });
+  wr.on("close", function (ex) {
+    done();
+  });
+  rd.pipe(wr);
+
+  function done(err) {
+    if (!cbCalled) {
+      cb(err);
+      cbCalled = true;
+    }
+  }
+}
+var DOWNLOAD_TMP_FOLDER = 'download_tmp';
+
+var createTmpDirectory = function () {
+  if (!fs.existsSync(DOWNLOAD_TMP_FOLDER)) {
+    fs.mkdirSync(DOWNLOAD_TMP_FOLDER);
+  }
+};
+
 const uuidv1 = require('uuid/v1');
+
+
 // Download gateway firmware
 router.get("/firmware-download", (req, res) => {
-  var tmp_file = uuidv1();
-  fs.copyFile(dist_path, tmp_file, function (error) {
-    res.download(dist_path, function (err_download) {
+  console.log('================ firmware-download ===================')
+  var tmp_file = `./${DOWNLOAD_TMP_FOLDER}/${uuidv1()}.zip`;
+  createTmpDirectory();
+  copyFile(dist_path, tmp_file, function (error) {
+    if(error){console.log('copyFile', error);}
+    console.log(`cloned to ${tmp_file}`);
+    res.download(tmp_file, function (err_download) {
       if (err_download) {
-        console.log(err_download);
+        console.log('err_download', err_download);
       }
-      console.log('deleting ', tmp_file);
       fs.unlinkSync(tmp_file);
     });
-  });
+  })
 });
 module.exports = router;
