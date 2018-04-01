@@ -96,17 +96,19 @@ const uuidv1 = require('uuid/v1');
 // Download gateway firmware
 router.get("/firmware-download", (req, res) => {
   console.log('================ firmware-download ===================')
-  var tmp_file = `./${DOWNLOAD_TMP_FOLDER}/${uuidv1()}.zip`;
-  createTmpDirectory();
-  copyFile(dist_path, tmp_file, function (error) {
-    if(error){console.log('copyFile', error);}
-    console.log(`cloned to ${tmp_file}`);
-    res.download(tmp_file, function (err_download) {
-      if (err_download) {
-        console.log('err_download', err_download);
-      }
-      fs.unlinkSync(tmp_file);
-    });
-  })
+  res.download(dist_path);
+  
+  // var tmp_file = `./${DOWNLOAD_TMP_FOLDER}/${uuidv1()}.zip`;
+  // createTmpDirectory();
+  // copyFile(dist_path, tmp_file, function (error) {
+  //   if(error){console.log('copyFile', error);}
+  //   console.log(`cloned to ${tmp_file}`);
+  //   res.download(tmp_file, function (err_download) {
+  //     if (err_download) {
+  //       console.log('err_download', err_download);
+  //     }
+  //     fs.unlinkSync(tmp_file);
+  //   });
+  // })
 });
 module.exports = router;
