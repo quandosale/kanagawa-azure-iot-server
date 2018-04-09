@@ -56,6 +56,20 @@ router.post("/", (req, res, next) => {
     deviceId: newGateway.deviceId,
   }).then(gateway => {
     if (gateway) {
+      if (gateway.name != newGateway.name) {
+        Gateway.update({
+          deviceId: newGateway.deviceId
+        }, {
+          $set: {
+            name: newGateway.name
+          }
+        }, function (err, gateway) {
+          if (err) {
+            console.log(err);
+          }
+          console.log('Successfully updated gateway name');
+        });
+      }
       if (gateway.isApprove)
         return res.json({
           message: "Gateway already registered",
